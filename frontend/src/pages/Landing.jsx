@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 
 export default function Landing() {
   return (
-    <div className="min-h-[80vh] flex flex-col lg:flex-row items-center justify-between gap-12 animate-in fade-in duration-700 pt-8">
-      <div className="flex-1 space-y-8 text-center lg:text-left z-10">
+    <div className="min-h-[80vh] flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 animate-in fade-in duration-700 pt-2 lg:pt-8">
+      <div className="flex-1 space-y-6 lg:space-y-8 text-center lg:text-left z-10">
         <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif-logo font-bold text-slate-800 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif-logo font-bold text-slate-800 leading-tight">
             Our Community <br />
             <span className="text-rose-500">Badminton</span> Court
           </h1>
@@ -19,10 +19,10 @@ export default function Landing() {
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block mt-4">
           <Link 
             to="/book" 
-            className="flex items-center gap-3 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-bold px-8 py-4 rounded-full shadow-[0_0_20px_rgba(244,63,94,0.4)] hover:shadow-[0_0_30px_rgba(245,158,11,0.6)] transition-all duration-300 group"
+            className="flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full shadow-[0_0_20px_rgba(244,63,94,0.4)] hover:shadow-[0_0_30px_rgba(245,158,11,0.6)] transition-all duration-300 group"
           >
-            <CalendarDays className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-            <span className="text-lg tracking-wider uppercase font-serif-logo">Book Now</span>
+            <CalendarDays className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform duration-300" />
+            <span className="text-base sm:text-lg tracking-wider uppercase font-serif-logo">Book Now</span>
           </Link>
         </motion.div>
       </div>

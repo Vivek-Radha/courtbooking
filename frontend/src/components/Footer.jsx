@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-amber-500/50"></div>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 text-center pt-2">
+        <div className="flex flex-wrap justify-center gap-x-6 md:gap-x-12 gap-y-6 text-center pt-2">
           <div className="space-y-1">
             <p className="font-bold text-slate-800 text-sm tracking-wide">Radha Vivek</p>
             <p className="text-xs text-rose-500 font-medium uppercase tracking-wider">Design UI & Developer</p>

@@ -39,11 +39,11 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.03)]">
-        <Link to="/" className="flex items-center gap-3 md:gap-4 group">
+      <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-4 md:px-6 py-3 md:py-4 flex justify-between items-center border-b border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.03)]">
+        <Link to="/" className="flex items-center gap-2 md:gap-4 group">
           <div className="relative transform group-hover:scale-105 transition-transform duration-500 ease-out">
             <div className="absolute -inset-1 bg-rose-500/20 rounded-full blur-md opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
-            <svg viewBox="0 0 100 100" className="w-12 h-12 relative z-10 drop-shadow-[0_2px_10px_rgba(244,63,94,0.5)]" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 100 100" className="w-9 h-9 md:w-12 md:h-12 relative z-10 drop-shadow-[0_2px_10px_rgba(244,63,94,0.5)]" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="backPetals" x1="0%" y1="100%" x2="0%" y2="0%">
                   <stop offset="0%" stopColor="#be123c" />
@@ -84,13 +84,13 @@ export default function Header() {
             </svg>
           </div>
           <div>
-            <h1 className="text-lg md:text-xl font-serif-logo font-bold tracking-widest text-gold-gradient drop-shadow-sm">
+            <h1 className="text-base md:text-xl font-serif-logo font-bold tracking-widest text-gold-gradient drop-shadow-sm">
               SUSHMITHA HOMES
             </h1>
-            <p className="text-[9px] md:text-[10px] text-rose-600/80 uppercase tracking-widest font-semibold flex items-center gap-1.5">
+            <p className="text-[8px] md:text-[10px] text-rose-600/80 uppercase tracking-widest font-semibold flex items-center gap-1 md:gap-1.5">
               <span>Badminton Court</span>
-              <span className="text-amber-500/80">•</span>
-              <span className="italic text-gray-500 font-normal normal-case">Making dreams come to life</span>
+              <span className="hidden sm:inline text-amber-500/80">•</span>
+              <span className="hidden sm:inline italic text-gray-500 font-normal normal-case">Making dreams come to life</span>
             </p>
           </div>
         </Link>

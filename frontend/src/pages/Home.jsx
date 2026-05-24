@@ -120,7 +120,7 @@ export default function Home() {
       <section className="text-center md:text-left space-y-3 py-6 relative">
         <div className="absolute top-0 left-0 w-44 h-44 bg-rose-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
         <div className="absolute top-20 right-0 w-44 h-44 bg-amber-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
-        <h2 className="text-2xl md:text-3xl font-serif-logo font-bold text-gold-gradient tracking-wide">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-serif-logo font-bold text-gold-gradient tracking-wide">
           Community Court Booking
         </h2>
         <p className="text-gray-600 text-sm md:text-base max-w-2xl leading-relaxed">

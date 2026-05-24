@@ -30,7 +30,7 @@ export default function Landing() {
       <div className="flex-1 relative w-full max-w-md mx-auto lg:max-w-lg mt-8 lg:mt-0">
         <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/10 to-rose-500/10 blur-2xl rounded-full" />
         <img 
-          src="/@fs/C:/Users/vivek/.gemini/antigravity-ide/brain/0d678851-e4ec-4b1e-ac1f-e494304fdea5/media__1779379372122.jpg" 
+          src="/badminton-court.jpg" 
           alt="Premium Badminton Court" 
           className="relative w-full h-auto max-h-[600px] rounded-3xl border border-gray-200/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] object-cover hover:scale-[1.04] hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(244,63,94,0.25)] hover:border-rose-300 transition-all duration-700 ease-out"
         />

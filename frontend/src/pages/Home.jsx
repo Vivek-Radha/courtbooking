@@ -119,10 +119,10 @@ export default function Home() {
         <div className="absolute top-0 left-0 w-44 h-44 bg-rose-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
         <div className="absolute top-20 right-0 w-44 h-44 bg-amber-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
         <h2 className="text-2xl md:text-3xl font-serif-logo font-bold text-gold-gradient tracking-wide">
-          Court Booking Portal
+          Community Court Booking
         </h2>
         <p className="text-gray-600 text-sm md:text-base max-w-2xl leading-relaxed">
-          Reserve your slot at the premium Sushmitha Homes Badminton Court. Experience professional-grade court surfaces, modern lighting, and elite residency privileges.
+          Welcome to the Sushmitha Homes community badminton court. Connect with neighbors, enjoy friendly matches, and foster an active, healthy lifestyle together.
         </p>
       </section>
       

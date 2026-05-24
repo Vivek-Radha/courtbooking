@@ -4,6 +4,8 @@ import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
 import { format } from 'date-fns';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export default function Admin() {
   const [bookings, setBookings] = useState([]);
   const [search, setSearch] = useState('');
@@ -22,7 +24,7 @@ export default function Admin() {
   const fetchBookings = async () => {
     if (!token) return;
     try {
-      const response = await fetch('http://localhost:5000/api/admin/bookings', {
+      const response = await fetch(`${API_URL}/api/admin/bookings`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -49,7 +51,7 @@ export default function Admin() {
   }, [token]);
 
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socket = io(API_URL);
 
     socket.on('slot_booked', () => {
       fetchBookings();
@@ -83,7 +85,7 @@ export default function Admin() {
     if (!confirm('Are you sure you want to cancel this booking?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/bookings/${id}`, {
+      const response = await fetch(`${API_URL}/api/admin/bookings/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

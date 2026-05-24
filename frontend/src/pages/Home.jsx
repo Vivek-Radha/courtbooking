@@ -5,6 +5,8 @@ import { format, addDays } from 'date-fns';
 import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const MORNING_SLOTS = [
   "06:00 - 07:00", "07:00 - 08:00"
 ];
@@ -33,7 +35,7 @@ export default function Home() {
     const fetchSlots = async () => {
       try {
         const dateStr = format(selectedDate, 'yyyy-MM-dd');
-        const response = await fetch(`http://localhost:5000/api/slots?date=${dateStr}`);
+        const response = await fetch(`${API_URL}/api/slots?date=${dateStr}`);
         if (!response.ok) throw new Error('Failed to load slots');
         const data = await response.json();
         setBookedSlots(data.bookedSlots || []);
@@ -48,7 +50,7 @@ export default function Home() {
 
   // Real-time socket updates
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socket = io(API_URL);
 
     socket.on('slot_booked', ({ date, timeSlot }) => {
       const currentDateStr = format(selectedDate, 'yyyy-MM-dd');
@@ -60,7 +62,7 @@ export default function Home() {
     socket.on('booking_cancelled', () => {
       // Reload slots if a booking gets cancelled
       const dateStr = format(selectedDate, 'yyyy-MM-dd');
-      fetch(`http://localhost:5000/api/slots?date=${dateStr}`)
+      fetch(`${API_URL}/api/slots?date=${dateStr}`)
         .then(res => res.json())
         .then(data => setBookedSlots(data.bookedSlots || []))
         .catch(err => console.error('Error reloading slots:', err));
@@ -80,7 +82,7 @@ export default function Home() {
     
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
     try {
-      const response = await fetch('http://localhost:5000/api/bookings', {
+      const response = await fetch(`${API_URL}/api/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

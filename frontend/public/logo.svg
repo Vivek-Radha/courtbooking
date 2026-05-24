@@ -1,39 +1,17 @@
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100" height="100">
-  <defs>
-    <linearGradient id="backPetals" x1="0%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stopColor="#be123c" />
-      <stop offset="60%" stopColor="#fb7185" />
-      <stop offset="100%" stopColor="#ffe4e6" />
-    </linearGradient>
-    <linearGradient id="midPetals" x1="0%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stopColor="#e11d48" />
-      <stop offset="70%" stopColor="#fda4af" />
-      <stop offset="100%" stopColor="#fff1f2" />
-    </linearGradient>
-    <linearGradient id="frontPetals" x1="0%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stopColor="#9f1239" />
-      <stop offset="50%" stopColor="#f43f5e" />
-      <stop offset="100%" stopColor="#fda4af" />
-    </linearGradient>
-    <radialGradient id="lotusCenter" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stopColor="#fef08a" />
-      <stop offset="50%" stopColor="#eab308" />
-      <stop offset="100%" stopColor="#ca8a04" />
-    </radialGradient>
-  </defs>
-  <path d="M 50 65 C 25 65, 15 45, 30 25 C 40 40, 48 55, 50 65 Z" fill="url(#backPetals)" opacity="0.85"/>
-  <path d="M 50 65 C 75 65, 85 45, 70 25 C 60 40, 52 55, 50 65 Z" fill="url(#backPetals)" opacity="0.85"/>
-  <path d="M 50 68 C 15 68, 10 50, 25 35 C 35 48, 45 58, 50 68 Z" fill="url(#midPetals)"/>
-  <path d="M 50 68 C 85 68, 90 50, 75 35 C 65 48, 55 58, 50 68 Z" fill="url(#midPetals)"/>
-  <path d="M 50 72 C 30 85, 15 75, 20 60 C 30 65, 45 70, 50 72 Z" fill="url(#backPetals)"/>
-  <path d="M 50 72 C 70 85, 85 75, 80 60 C 70 65, 55 70, 50 72 Z" fill="url(#backPetals)"/>
-  <ellipse cx="50" cy="58" rx="8" ry="12" fill="url(#lotusCenter)"/>
+  <path d="M 50 65 C 25 65, 15 45, 30 25 C 40 40, 48 55, 50 65 Z" fill="#fb7185" opacity="0.85"/>
+  <path d="M 50 65 C 75 65, 85 45, 70 25 C 60 40, 52 55, 50 65 Z" fill="#fb7185" opacity="0.85"/>
+  <path d="M 50 68 C 15 68, 10 50, 25 35 C 35 48, 45 58, 50 68 Z" fill="#fda4af"/>
+  <path d="M 50 68 C 85 68, 90 50, 75 35 C 65 48, 55 58, 50 68 Z" fill="#fda4af"/>
+  <path d="M 50 72 C 30 85, 15 75, 20 60 C 30 65, 45 70, 50 72 Z" fill="#fb7185"/>
+  <path d="M 50 72 C 70 85, 85 75, 80 60 C 70 65, 55 70, 50 72 Z" fill="#fb7185"/>
+  <ellipse cx="50" cy="58" rx="8" ry="12" fill="#eab308"/>
   <circle cx="47" cy="53" r="1.5" fill="#ffffff" opacity="0.8"/>
   <circle cx="53" cy="51" r="1" fill="#ffffff" opacity="0.8"/>
   <circle cx="50" cy="49" r="1.5" fill="#ffffff" opacity="0.8"/>
   <circle cx="46" cy="62" r="1.2" fill="#ffffff" opacity="0.6"/>
   <circle cx="54" cy="60" r="1" fill="#ffffff" opacity="0.6"/>
-  <path d="M 50 72 C 35 70, 25 45, 40 30 C 45 45, 48 60, 50 72 Z" fill="url(#frontPetals)"/>
-  <path d="M 50 72 C 65 70, 75 45, 60 30 C 55 45, 52 60, 50 72 Z" fill="url(#frontPetals)"/>
-  <path d="M 50 75 C 38 65, 38 40, 50 15 C 62 40, 62 65, 50 75 Z" fill="url(#frontPetals)"/>
+  <path d="M 50 72 C 35 70, 25 45, 40 30 C 45 45, 48 60, 50 72 Z" fill="#f43f5e"/>
+  <path d="M 50 72 C 65 70, 75 45, 60 30 C 55 45, 52 60, 50 72 Z" fill="#f43f5e"/>
+  <path d="M 50 75 C 38 65, 38 40, 50 15 C 62 40, 62 65, 50 75 Z" fill="#f43f5e"/>
 </svg>

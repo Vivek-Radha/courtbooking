@@ -57,20 +57,21 @@ const writeLocalBookings = (bookings) => {
   }
 };
 
-mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 2000 })
+mongoose.connect(process.env.MONGODB_URI, {
+  serverSelectionTimeoutMS: 2000
+})
   .then(() => {
-    console.log('MongoDB connected successfully');
-    isMongoConnected = true;
+    console.log("MongoDB Connected")
+    console.log("Database Name:", mongoose.connection.name)
   })
-  .catch(err => {
-    console.warn('MongoDB connection failed, falling back to local JSON database. Error:', err.message);
-    isMongoConnected = false;
-  });
+  .catch((err) => {
+    console.log(err)
+  })
 
 // --- Socket.io for Real-time ---
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
-  
+
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
   });
@@ -128,10 +129,10 @@ app.post('/api/bookings', async (req, res) => {
     } else {
       saveLocalBooking({ date, timeSlot, flatNumber, name, phoneNumber });
     }
-    
+
     // Notify all clients about the new booking
     io.emit('slot_booked', { date, timeSlot });
-    
+
     res.status(201).json({ message: 'Booking successful' });
   } catch (error) {
     if (error.code === 11000 || error.message === 'Slot already booked') {
@@ -166,7 +167,7 @@ function saveLocalBooking(data) {
 const authenticateAdmin = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.admin = decoded;
@@ -212,10 +213,10 @@ app.delete('/api/admin/bookings/:id', authenticateAdmin, async (req, res) => {
       local = local.filter(b => b.id !== id && b._id !== id);
       writeLocalBookings(local);
     }
-    
+
     // Notify all clients about deletion
     io.emit('booking_cancelled', { id });
-    
+
     res.json({ message: 'Booking cancelled successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

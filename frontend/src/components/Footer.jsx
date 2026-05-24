@@ -7,7 +7,7 @@ export default function Footer() {
           <h4 className="text-[10px] uppercase tracking-[0.3em] font-serif-logo font-bold text-gold-gradient drop-shadow-sm">Project Crew</h4>
           <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-amber-500/50"></div>
         </div>
-        
+
         <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 text-center pt-2">
           <div className="space-y-1">
             <p className="font-bold text-slate-800 text-sm tracking-wide">Radha Vivek</p>
@@ -18,7 +18,7 @@ export default function Footer() {
             <p className="text-xs text-rose-500 font-medium uppercase tracking-wider">Idea Pitching & Planner</p>
           </div>
           <div className="space-y-1">
-            <p className="font-bold text-slate-800 text-sm tracking-wide">Srujan Reddy Bommineni</p>
+            <p className="font-bold text-slate-800 text-sm tracking-wide">Sujan Reddy Bommineni</p>
             <p className="text-xs text-rose-500 font-medium uppercase tracking-wider">Treasurer</p>
           </div>
         </div>

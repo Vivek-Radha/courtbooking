@@ -79,6 +79,10 @@ export default function Home() {
       toast.error('Please fill all fields');
       return;
     }
+    if (!/^[0-9]{10}$/.test(phone)) {
+   toast.error('Please enter valid 10-digit phone number');
+   return;
+}
     
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
     try {
@@ -114,7 +118,7 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500">
+    <div className="space-y-2 animate-in fade-in duration-500">
       
       {/* Hero Welcome Section */}
       <section className="text-center md:text-left space-y-3 py-6 relative">

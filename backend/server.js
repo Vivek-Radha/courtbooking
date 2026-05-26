@@ -8,13 +8,17 @@ import Booking from './models/Booking.js';
 import Admin from './models/Admin.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import twilio from 'twilio';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 
 dotenv.config();
-
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -61,6 +65,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 2000
 })
   .then(() => {
+    isMongoConnected = true;
     console.log("MongoDB Connected")
     console.log("Database Name:", mongoose.connection.name)
   })
@@ -116,12 +121,32 @@ app.post('/api/bookings', async (req, res) => {
 
     if (isMongoConnected) {
       try {
+        const existingBooking = await Booking.findOne({
+   date,
+   phoneNumber
+});
+
+if (existingBooking) {
+   return res.status(400).json({
+      error: 'This phone number already booked this slot'
+   });
+}
         const newBooking = new Booking({ date, timeSlot, flatNumber, name, phoneNumber });
         await newBooking.save();
+        await client.messages.create({
+  from: process.env.TWILIO_WHATSAPP_NUMBER,
+  to: `whatsapp:+91${phoneNumber}`,
+  body:
+    `✅ Court Booking Confirmed\n\n` +
+    `Name: ${name}\n` +
+    `Date: ${date}\n` +
+    `Slot: ${timeSlot}\n\n` +
+    `Thank you for booking.`
+});
       } catch (err) {
         console.error('MongoDB save error, using local fallback:', err);
         if (err.code === 11000) {
-          return res.status(400).json({ error: 'Slot already booked' });
+          return res.status(400).json({ error: 'This phone number already booked this slot' });
         }
         // Fallback to saving in local JSON if save fails
         saveLocalBooking({ date, timeSlot, flatNumber, name, phoneNumber });
@@ -135,8 +160,8 @@ app.post('/api/bookings', async (req, res) => {
 
     res.status(201).json({ message: 'Booking successful' });
   } catch (error) {
-    if (error.code === 11000 || error.message === 'Slot already booked') {
-      return res.status(400).json({ error: 'Slot already booked' });
+    if (error.code === 11000 || error.message === 'This phone number already booked this slot') {
+      return res.status(400).json({ error: 'This phone number already booked this slot' });
     }
     res.status(500).json({ error: error.message });
   }
@@ -144,10 +169,13 @@ app.post('/api/bookings', async (req, res) => {
 
 function saveLocalBooking(data) {
   const local = readLocalBookings();
-  const exists = local.some(b => b.date === data.date && b.timeSlot === data.timeSlot && b.status === 'booked');
+  const exists = local.some(b =>
+    b.date === data.date &&
+    b.phoneNumber === data.phoneNumber &&
+    b.status === 'booked'
+  );
   if (exists) {
-    const err = new Error('Slot already booked');
-    err.code = 11000;
+const err = new Error('This phone number already booked this slot');    err.code = 11000;
     throw err;
   }
   const newBooking = {

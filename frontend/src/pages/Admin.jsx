@@ -119,7 +119,7 @@ export default function Admin() {
     const headers = ['Date', 'Time Slot', 'Flat Number', 'Name', 'Phone Number', 'Status'];
     const csvContent = [
       headers.join(','),
-      ...bookings.map(b => `${b.date},${b.timeSlot},${b.flatNumber},"${b.name}",${b.phoneNumber},${b.status}`)
+      ...bookings.map(b => `="${b.date}",${b.timeSlot},${b.flatNumber},"${b.name}",="${b.phoneNumber}",${b.status}`)
     ].join('\n');
     
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

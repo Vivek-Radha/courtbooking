@@ -110,6 +110,29 @@ export default function Admin() {
     toast.success('Logged out successfully');
   };
 
+  const handleDownload = () => {
+    if (bookings.length === 0) {
+      toast.error('No bookings to download');
+      return;
+    }
+    
+    const headers = ['Date', 'Time Slot', 'Flat Number', 'Name', 'Phone Number', 'Status'];
+    const csvContent = [
+      headers.join(','),
+      ...bookings.map(b => `${b.date},${b.timeSlot},${b.flatNumber},"${b.name}",${b.phoneNumber},${b.status}`)
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `bookings_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const filteredBookings = bookings.filter(b => 
     b.flatNumber?.toLowerCase().includes(search.toLowerCase()) ||
     b.name?.toLowerCase().includes(search.toLowerCase()) ||
@@ -128,12 +151,23 @@ export default function Admin() {
           </h1>
           <p className="text-gray-600 text-sm">Monitor court reservations and resident details.</p>
         </div>
-        <button 
-          onClick={handleLogout}
-          className="bg-white border border-gray-200 shadow-sm px-4 py-2 rounded-xl text-sm hover:border-rose-500/30 hover:bg-rose-50 transition-all text-gray-600 hover:text-rose-600 font-semibold"
-        >
-          Logout
-        </button>
+        <div className="flex gap-4">
+          <button 
+            onClick={handleDownload}
+            className="bg-emerald-50 border border-emerald-200 shadow-sm px-4 py-2 rounded-xl text-sm hover:border-emerald-500/30 hover:bg-emerald-100 transition-all text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download CSV
+          </button>
+          <button 
+            onClick={handleLogout}
+            className="bg-white border border-gray-200 shadow-sm px-4 py-2 rounded-xl text-sm hover:border-rose-500/30 hover:bg-rose-50 transition-all text-gray-600 hover:text-rose-600 font-semibold"
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
       {/* Statistics Cards */}

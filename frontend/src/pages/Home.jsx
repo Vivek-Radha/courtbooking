@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { format, addDays } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -19,6 +19,8 @@ export default function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showBookingForm, setShowBookingForm] = useState(false);
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+  const [successDetails, setSuccessDetails] = useState(null);
   
   // Form state
   const [flatNumber, setFlatNumber] = useState('');
@@ -105,8 +107,10 @@ export default function Home() {
         throw new Error(data.error || 'Failed to book slot');
       }
 
-      toast.success('Court booked successfully!');
+      setSuccessDetails({ slot: selectedSlot, date: selectedDate });
       setShowBookingForm(false);
+      setShowSuccessAnimation(true);
+      setTimeout(() => setShowSuccessAnimation(false), 3500);
       setSelectedSlot(null);
       setFlatNumber('');
       setName('');
@@ -276,6 +280,95 @@ export default function Home() {
         document.body
       )}
 
+      {/* Success Animation Modal */}
+      <AnimatePresence>
+        {showSuccessAnimation && successDetails && createPortal(
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-gray-900/70 backdrop-blur-md"
+          >
+            {/* Confetti particles */}
+            {Array.from({ length: 60 }).map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
+                animate={{
+                  opacity: 0,
+                  scale: Math.random() * 2 + 0.5,
+                  x: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerWidth : 800),
+                  y: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerHeight : 800),
+                }}
+                transition={{ duration: 1.5 + Math.random() * 1.5, ease: "easeOut" }}
+                className={`absolute w-3 h-3 rounded-full ${['bg-rose-500', 'bg-amber-400', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'][Math.floor(Math.random() * 6)]}`}
+                style={{ top: '50%', left: '50%' }}
+              />
+            ))}
+
+            <motion.div 
+              initial={{ scale: 0.5, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 10 }}
+              transition={{ type: "spring", bounce: 0.5, duration: 0.7 }}
+              className="flex flex-col items-center bg-white p-10 rounded-[2rem] shadow-2xl relative z-10 mx-4 max-w-sm w-full"
+            >
+              {/* Outer pulse */}
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.5 }}
+                animate={{ scale: 1.5, opacity: 0 }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
+                className="absolute w-24 h-24 bg-green-400 rounded-full top-10"
+              />
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.4)] relative z-20"
+              >
+                <svg className="w-12 h-12 text-white drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                  <motion.path 
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    d="M5 13l4 4L19 7" 
+                  />
+                </svg>
+              </motion.div>
+              <motion.h2 
+                initial={{ y: 15, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="text-2xl sm:text-3xl font-bold text-gray-800 font-serif-logo text-center mb-2"
+              >
+                Booking Confirmed!
+              </motion.h2>
+              <motion.p 
+                initial={{ y: 15, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="text-gray-500 text-center leading-relaxed"
+              >
+                You're all set. Your court is booked for <br/>
+                <span className="font-bold text-gray-800">{successDetails.slot}</span> on <span className="font-medium text-gray-700">{format(successDetails.date, 'MMM do')}</span>.
+              </motion.p>
+              
+              <motion.button
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                onClick={() => setShowSuccessAnimation(false)}
+                className="mt-8 px-8 py-3 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl font-medium transition-colors border border-gray-200"
+              >
+                Close
+              </motion.button>
+            </motion.div>
+          </motion.div>,
+          document.body
+        )}
+      </AnimatePresence>
     </div>
   );
 }

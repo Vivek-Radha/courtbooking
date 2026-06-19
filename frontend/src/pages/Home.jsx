@@ -75,6 +75,54 @@ export default function Home() {
     };
   }, [selectedDate]);
 
+  // Play success sound effect when animation triggers
+  useEffect(() => {
+    if (showSuccessAnimation) {
+      const playSuccessSound = () => {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          const ctx = new AudioContext();
+          
+          const playNote = (frequency, startTime, duration) => {
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+
+            osc1.type = 'sine';
+            osc2.type = 'triangle';
+            
+            osc1.frequency.value = frequency;
+            osc2.frequency.value = frequency * 2; // Adds a harmonic for a brighter "bell" sound
+            
+            gainNode.gain.setValueAtTime(0, ctx.currentTime + startTime);
+            gainNode.gain.linearRampToValueAtTime(0.15, ctx.currentTime + startTime + 0.02);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+
+            osc1.connect(gainNode);
+            osc2.connect(gainNode);
+            gainNode.connect(ctx.destination);
+
+            osc1.start(ctx.currentTime + startTime);
+            osc2.start(ctx.currentTime + startTime);
+            osc1.stop(ctx.currentTime + startTime + duration);
+            osc2.stop(ctx.currentTime + startTime + duration);
+          };
+
+          // A beautiful, bright C major arpeggio "ta-da!" effect
+          playNote(523.25, 0.0, 0.6);   // C5
+          playNote(659.25, 0.08, 0.6);  // E5
+          playNote(783.99, 0.16, 0.6);  // G5
+          playNote(1046.50, 0.24, 1.2); // C6
+        } catch (e) {
+          console.error('Audio playback failed', e);
+        }
+      };
+      
+      playSuccessSound();
+    }
+  }, [showSuccessAnimation]);
+
   const handleBook = async (e) => {
     e.preventDefault();
     if (!flatNumber || !name || !phone) {

@@ -216,159 +216,171 @@ export default function Home() {
       </section>
 
       {/* Booking Form Modal */}
-      {showBookingForm && selectedSlot && createPortal(
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/40 backdrop-blur-sm p-4"
-        >
-          <motion.div 
-            initial={{ scale: 0.93, y: 15 }}
-            animate={{ scale: 1, y: 0 }}
-            className="bg-white border border-rose-200 p-6 md:p-8 rounded-3xl w-full max-w-md relative shadow-xl"
-          >
-            <button 
-              onClick={() => setShowBookingForm(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+      {createPortal(
+        <AnimatePresence>
+          {showBookingForm && selectedSlot && (
+            <motion.div 
+              key="booking-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/40 backdrop-blur-sm p-4"
             >
-              ✕
-            </button>
-            
-            <div className="mb-6">
-              <h2 className="text-xl font-serif-logo font-bold text-gold-gradient">Confirm Court Reservation</h2>
-              <p className="text-rose-400 text-sm mt-1.5 font-medium flex items-center gap-2">
-                <span>📅 {format(selectedDate, 'MMMM d, yyyy')}</span>
-                <span className="text-gray-600">•</span>
-                <span>⏰ {selectedSlot}</span>
-              </p>
-            </div>
-            
-            <form onSubmit={handleBook} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Flat Number</label>
-                <input 
-                  type="text" required placeholder="e.g. A-101"
-                  value={flatNumber} onChange={e => setFlatNumber(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all placeholder-gray-400"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Resident Name</label>
-                <input 
-                  type="text" required placeholder="Your Name"
-                  value={name} onChange={e => setName(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all placeholder-gray-400"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Phone Number</label>
-                <input 
-                  type="tel" required placeholder="10-digit number"
-                  value={phone} onChange={e => setPhone(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all placeholder-gray-400"
-                />
-              </div>
-              <button 
-                type="submit"
-                className="w-full mt-6 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)] transform hover:-translate-y-0.5 active:translate-y-0"
+              <motion.div 
+                key="booking-modal"
+                initial={{ scale: 0.93, y: 15, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                exit={{ scale: 0.93, y: 15, opacity: 0 }}
+                className="bg-white border border-rose-200 p-6 md:p-8 rounded-3xl w-full max-w-md relative shadow-xl"
               >
-                Confirm Booking
-              </button>
-            </form>
-          </motion.div>
-        </motion.div>,
+                <button 
+                  onClick={() => setShowBookingForm(false)}
+                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+                >
+                  ✕
+                </button>
+                
+                <div className="mb-6">
+                  <h2 className="text-xl font-serif-logo font-bold text-gold-gradient">Confirm Court Reservation</h2>
+                  <p className="text-rose-400 text-sm mt-1.5 font-medium flex items-center gap-2">
+                    <span>📅 {format(selectedDate, 'MMMM d, yyyy')}</span>
+                    <span className="text-gray-600">•</span>
+                    <span>⏰ {selectedSlot}</span>
+                  </p>
+                </div>
+                
+                <form onSubmit={handleBook} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Flat Number</label>
+                    <input 
+                      type="text" required placeholder="e.g. A-101"
+                      value={flatNumber} onChange={e => setFlatNumber(e.target.value)}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all placeholder-gray-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Resident Name</label>
+                    <input 
+                      type="text" required placeholder="Your Name"
+                      value={name} onChange={e => setName(e.target.value)}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all placeholder-gray-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Phone Number</label>
+                    <input 
+                      type="tel" required placeholder="10-digit number"
+                      value={phone} onChange={e => setPhone(e.target.value)}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all placeholder-gray-400"
+                    />
+                  </div>
+                  <button 
+                    type="submit"
+                    className="w-full mt-6 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)] transform hover:-translate-y-0.5 active:translate-y-0"
+                  >
+                    Confirm Booking
+                  </button>
+                </form>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
         document.body
       )}
 
       {/* Success Animation Modal */}
-      <AnimatePresence>
-        {showSuccessAnimation && successDetails && createPortal(
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-gray-900/70 backdrop-blur-md"
-          >
-            {/* Confetti particles */}
-            {Array.from({ length: 60 }).map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
-                animate={{
-                  opacity: 0,
-                  scale: Math.random() * 2 + 0.5,
-                  x: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerWidth : 800),
-                  y: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerHeight : 800),
-                }}
-                transition={{ duration: 1.5 + Math.random() * 1.5, ease: "easeOut" }}
-                className={`absolute w-3 h-3 rounded-full ${['bg-rose-500', 'bg-amber-400', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'][Math.floor(Math.random() * 6)]}`}
-                style={{ top: '50%', left: '50%' }}
-              />
-            ))}
-
-            <motion.div 
-              initial={{ scale: 0.5, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 10 }}
-              transition={{ type: "spring", bounce: 0.5, duration: 0.7 }}
-              className="flex flex-col items-center bg-white p-10 rounded-[2rem] shadow-2xl relative z-10 mx-4 max-w-sm w-full"
+      {createPortal(
+        <AnimatePresence>
+          {showSuccessAnimation && successDetails && (
+            <motion.div
+              key="success-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[200] flex items-center justify-center bg-gray-900/70 backdrop-blur-md"
             >
-              {/* Outer pulse */}
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0.5 }}
-                animate={{ scale: 1.5, opacity: 0 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
-                className="absolute w-24 h-24 bg-green-400 rounded-full top-10"
-              />
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.4)] relative z-20"
+              {/* Confetti particles */}
+              {Array.from({ length: 60 }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
+                  animate={{
+                    opacity: 0,
+                    scale: Math.random() * 2 + 0.5,
+                    x: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerWidth : 800),
+                    y: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerHeight : 800),
+                  }}
+                  transition={{ duration: 1.5 + Math.random() * 1.5, ease: "easeOut" }}
+                  className={`absolute w-3 h-3 rounded-full ${['bg-rose-500', 'bg-amber-400', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'][Math.floor(Math.random() * 6)]}`}
+                  style={{ top: '50%', left: '50%' }}
+                />
+              ))}
+
+              <motion.div 
+                key="success-modal"
+                initial={{ scale: 0.5, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 10 }}
+                transition={{ type: "spring", bounce: 0.5, duration: 0.7 }}
+                className="flex flex-col items-center bg-white p-10 rounded-[2rem] shadow-2xl relative z-10 mx-4 max-w-sm w-full"
               >
-                <svg className="w-12 h-12 text-white drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                  <motion.path 
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    d="M5 13l4 4L19 7" 
-                  />
-                </svg>
+                {/* Outer pulse */}
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0.5 }}
+                  animate={{ scale: 1.5, opacity: 0 }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
+                  className="absolute w-24 h-24 bg-green-400 rounded-full top-10"
+                />
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.4)] relative z-20"
+                >
+                  <svg className="w-12 h-12 text-white drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                    <motion.path 
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      d="M5 13l4 4L19 7" 
+                    />
+                  </svg>
+                </motion.div>
+                <motion.h2 
+                  initial={{ y: 15, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="text-2xl sm:text-3xl font-bold text-gray-800 font-serif-logo text-center mb-2"
+                >
+                  Booking Confirmed!
+                </motion.h2>
+                <motion.p 
+                  initial={{ y: 15, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="text-gray-500 text-center leading-relaxed"
+                >
+                  You're all set. Your court is booked for <br/>
+                  <span className="font-bold text-gray-800">{successDetails.slot}</span> on <span className="font-medium text-gray-700">{format(successDetails.date, 'MMM do')}</span>.
+                </motion.p>
+                
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  onClick={() => setShowSuccessAnimation(false)}
+                  className="mt-8 px-8 py-3 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl font-medium transition-colors border border-gray-200"
+                >
+                  Close
+                </motion.button>
               </motion.div>
-              <motion.h2 
-                initial={{ y: 15, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-2xl sm:text-3xl font-bold text-gray-800 font-serif-logo text-center mb-2"
-              >
-                Booking Confirmed!
-              </motion.h2>
-              <motion.p 
-                initial={{ y: 15, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="text-gray-500 text-center leading-relaxed"
-              >
-                You're all set. Your court is booked for <br/>
-                <span className="font-bold text-gray-800">{successDetails.slot}</span> on <span className="font-medium text-gray-700">{format(successDetails.date, 'MMM do')}</span>.
-              </motion.p>
-              
-              <motion.button
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                onClick={() => setShowSuccessAnimation(false)}
-                className="mt-8 px-8 py-3 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl font-medium transition-colors border border-gray-200"
-              >
-                Close
-              </motion.button>
             </motion.div>
-          </motion.div>,
-          document.body
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 }

@@ -15,11 +15,11 @@ export default function Footer() {
           </div>
           <div className="space-y-1">
             <p className="font-bold text-slate-800 text-sm tracking-wide">Varikoti Varun Raj</p>
-            <p className="text-xs text-rose-500 font-medium uppercase tracking-wider">Idea Pitching & Planner</p>
+            <p className="text-xs text-rose-500 font-medium uppercase tracking-wider">Design UI & Develope</p>
           </div>
           <div className="space-y-1">
             <p className="font-bold text-slate-800 text-sm tracking-wide">Sujan Reddy Bommineni</p>
-            <p className="text-xs text-rose-500 font-medium uppercase tracking-wider">Treasurer</p>
+            <p className="text-xs text-rose-500 font-medium uppercase tracking-wider">Design UI & Develope</p>
           </div>
         </div>
       </div>

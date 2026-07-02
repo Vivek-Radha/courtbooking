@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
-import { format, addDays } from 'date-fns';
+import { format, addDays, isToday } from 'date-fns';
 import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
+import { ArrowLeft } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -21,7 +23,8 @@ export default function Home() {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const [successDetails, setSuccessDetails] = useState(null);
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Form state
   const [flatNumber, setFlatNumber] = useState('');
   const [name, setName] = useState('');
@@ -29,7 +32,7 @@ export default function Home() {
 
   // Booked slots loaded from database
   const [bookedSlots, setBookedSlots] = useState([]);
-  
+
   const dates = Array.from({ length: 7 }).map((_, i) => addDays(new Date(), i));
 
   // Fetch booked slots when date changes
@@ -83,7 +86,7 @@ export default function Home() {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
           if (!AudioContext) return;
           const ctx = new AudioContext();
-          
+
           const playNote = (frequency, startTime, duration) => {
             const osc1 = ctx.createOscillator();
             const osc2 = ctx.createOscillator();
@@ -91,10 +94,10 @@ export default function Home() {
 
             osc1.type = 'sine';
             osc2.type = 'triangle';
-            
+
             osc1.frequency.value = frequency;
             osc2.frequency.value = frequency * 2; // Adds a harmonic for a brighter "bell" sound
-            
+
             gainNode.gain.setValueAtTime(0, ctx.currentTime + startTime);
             gainNode.gain.linearRampToValueAtTime(0.15, ctx.currentTime + startTime + 0.02);
             gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
@@ -118,7 +121,7 @@ export default function Home() {
           console.error('Audio playback failed', e);
         }
       };
-      
+
       playSuccessSound();
     }
   }, [showSuccessAnimation]);
@@ -130,11 +133,12 @@ export default function Home() {
       return;
     }
     if (!/^[0-9]{10}$/.test(phone)) {
-   toast.error('Please enter valid 10-digit phone number');
-   return;
-}
-    
+      toast.error('Please enter valid 10-digit phone number');
+      return;
+    }
+
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
+    setIsSubmitting(true);
     try {
       const response = await fetch(`${API_URL}/api/bookings`, {
         method: 'POST',
@@ -166,12 +170,20 @@ export default function Home() {
     } catch (err) {
       console.error(err);
       toast.error(err.message || 'Could not complete booking');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="space-y-2 animate-in fade-in duration-500">
-      
+
+      {/* Back Link */}
+      <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-rose-500 transition-colors duration-300 mb-2 group">
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform duration-300" />
+        <span className="font-medium">Back to Home</span>
+      </Link>
+
       {/* Hero Welcome Section */}
       <section className="text-center md:text-left space-y-3 py-6 relative">
         <div className="absolute top-0 left-0 w-44 h-44 bg-rose-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
@@ -183,23 +195,26 @@ export default function Home() {
           Welcome to the Sushmitha Homes community badminton court. Connect with neighbors, enjoy friendly matches, and foster an active, healthy lifestyle together.
         </p>
       </section>
-      
+
       {/* Date Selector */}
       <section className="space-y-6">
         <h2 className="text-base md:text-lg font-serif-logo font-bold tracking-wider text-gold-gradient uppercase">Select Date</h2>
         <div className="flex gap-4 overflow-x-auto py-4 px-2 snap-x scrollbar-thin -mx-2">
           {dates.map((date, i) => {
             const isSelected = format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
+            const dateIsToday = isToday(date);
             return (
               <button
                 key={i}
                 onClick={() => setSelectedDate(date)}
-                className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-20 h-24 rounded-2xl border transition-all duration-300 ease-out cursor-pointer ${
-                  isSelected 
-                    ? 'bg-rose-500 border-rose-500 shadow-[0_8px_20px_rgba(244,63,94,0.3)] text-white scale-105 hover:scale-110 hover:shadow-[0_12px_25px_rgba(244,63,94,0.45)]' 
+                className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-20 h-24 rounded-2xl border transition-all duration-300 ease-out cursor-pointer relative ${isSelected
+                    ? 'bg-rose-500 border-rose-500 shadow-[0_8px_20px_rgba(244,63,94,0.3)] text-white scale-105 hover:scale-110 hover:shadow-[0_12px_25px_rgba(244,63,94,0.45)]'
                     : 'bg-white border-gray-200 text-gray-500 hover:border-amber-400 hover:bg-amber-50 hover:-translate-y-1 hover:shadow-lg hover:scale-105'
-                }`}
+                  }`}
               >
+                {dateIsToday && (
+                  <span className={`absolute -top-2.5 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${isSelected ? 'bg-white text-rose-500' : 'bg-rose-500 text-white'}`}>Today</span>
+                )}
                 <span className={`text-xs uppercase tracking-widest font-bold mb-0.5 ${isSelected ? 'text-rose-100' : 'text-gray-400'}`}>{format(date, 'EEE')}</span>
                 <span className={`text-[28px] font-black leading-none my-1.5 ${isSelected ? 'text-white' : 'text-slate-800'}`}>
                   {format(date, 'dd')}
@@ -214,7 +229,7 @@ export default function Home() {
       {/* Time Slots */}
       <section className="space-y-8">
         <h2 className="text-base md:text-lg font-serif-logo font-bold tracking-wider text-gold-gradient uppercase">Available Slots</h2>
-        
+
         {[
           { title: "Morning Slots", icon: "☀️", slots: MORNING_SLOTS, iconColor: "text-amber-400" },
           { title: "Evening Slots", icon: "🌙", slots: EVENING_SLOTS, iconColor: "text-rose-400" }
@@ -227,7 +242,7 @@ export default function Home() {
               {group.slots.map((slot) => {
                 const isBooked = bookedSlots.includes(slot);
                 const isSelected = selectedSlot === slot;
-                
+
                 return (
                   <motion.button
                     whileHover={!isBooked ? { scale: 1.04, y: -2 } : {}}
@@ -240,11 +255,11 @@ export default function Home() {
                     }}
                     className={`
                       relative overflow-hidden rounded-xl py-4 px-3 font-semibold border transition-all duration-300 text-center
-                      ${isBooked 
-                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed shadow-inner' 
+                      ${isBooked
+                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed shadow-inner'
                         : isSelected
                           ? 'bg-rose-500/10 border-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.15)] text-rose-600'
-                          : 'bg-white border-gray-200 shadow-sm hover:border-amber-300 hover:bg-amber-50 text-gray-700'}
+                          : 'bg-gradient-to-b from-white to-amber-50/50 border-amber-200/60 shadow-sm hover:border-amber-400 hover:shadow-md text-gray-700'}
                     `}
                   >
                     <span className={isBooked ? 'filter blur-[1px]' : ''}>{slot}</span>
@@ -267,27 +282,29 @@ export default function Home() {
       {createPortal(
         <AnimatePresence>
           {showBookingForm && selectedSlot && (
-            <motion.div 
+            <motion.div
               key="booking-backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              onClick={() => setShowBookingForm(false)}
               className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/40 backdrop-blur-sm p-4"
             >
-              <motion.div 
+              <motion.div
                 key="booking-modal"
                 initial={{ scale: 0.93, y: 15, opacity: 0 }}
                 animate={{ scale: 1, y: 0, opacity: 1 }}
                 exit={{ scale: 0.93, y: 15, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
                 className="bg-white border border-rose-200 p-6 md:p-8 rounded-3xl w-full max-w-md relative shadow-xl"
               >
-                <button 
+                <button
                   onClick={() => setShowBookingForm(false)}
                   className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
                 >
                   ✕
                 </button>
-                
+
                 <div className="mb-6">
                   <h2 className="text-xl font-serif-logo font-bold text-gold-gradient">Confirm Court Reservation</h2>
                   <p className="text-rose-400 text-sm mt-1.5 font-medium flex items-center gap-2">
@@ -296,11 +313,11 @@ export default function Home() {
                     <span>⏰ {selectedSlot}</span>
                   </p>
                 </div>
-                
+
                 <form onSubmit={handleBook} className="space-y-4">
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Flat Number</label>
-                    <input 
+                    <input
                       type="text" required placeholder="e.g. A-101"
                       value={flatNumber} onChange={e => setFlatNumber(e.target.value)}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all placeholder-gray-400"
@@ -308,7 +325,7 @@ export default function Home() {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Resident Name</label>
-                    <input 
+                    <input
                       type="text" required placeholder="Your Name"
                       value={name} onChange={e => setName(e.target.value)}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all placeholder-gray-400"
@@ -316,17 +333,31 @@ export default function Home() {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Phone Number</label>
-                    <input 
+                    <input
                       type="tel" required placeholder="10-digit number"
-                      value={phone} onChange={e => setPhone(e.target.value)}
+                      inputMode="numeric" pattern="[0-9]*" maxLength={10}
+                      value={phone} onChange={e => setPhone(e.target.value.replace(/\D/g, ''))}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all placeholder-gray-400"
                     />
                   </div>
-                  <button 
+                  <button
                     type="submit"
-                    className="w-full mt-6 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)] transform hover:-translate-y-0.5 active:translate-y-0"
+                    disabled={isSubmitting}
+                    className={`w-full mt-6 font-bold py-4 rounded-xl transition-all transform active:translate-y-0 ${
+                      isSubmitting
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none'
+                        : 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)] hover:-translate-y-0.5'
+                    }`}
                   >
-                    Confirm Booking
+                    {isSubmitting ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Booking...
+                      </span>
+                    ) : 'Confirm Booking'}
                   </button>
                 </form>
               </motion.div>
@@ -364,7 +395,7 @@ export default function Home() {
                 />
               ))}
 
-              <motion.div 
+              <motion.div
                 key="success-modal"
                 initial={{ scale: 0.5, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -386,17 +417,17 @@ export default function Home() {
                   className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.4)] relative z-20"
                 >
                   <svg className="w-12 h-12 text-white drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                    <motion.path 
+                    <motion.path
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
                       transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      d="M5 13l4 4L19 7" 
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
                     />
                   </svg>
                 </motion.div>
-                <motion.h2 
+                <motion.h2
                   initial={{ y: 15, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.5 }}
@@ -404,16 +435,16 @@ export default function Home() {
                 >
                   Booking Confirmed!
                 </motion.h2>
-                <motion.p 
+                <motion.p
                   initial={{ y: 15, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.6 }}
                   className="text-gray-500 text-center leading-relaxed"
                 >
-                  You're all set. Your court is booked for <br/>
+                  You're all set. Your court is booked for <br />
                   <span className="font-bold text-gray-800">{successDetails.slot}</span> on <span className="font-medium text-gray-700">{format(successDetails.date, 'MMM do')}</span>.
                 </motion.p>
-                
+
                 <motion.button
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}

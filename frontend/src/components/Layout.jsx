@@ -1,8 +1,11 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from './Header';
 import Footer from './Footer';
 
 export default function Layout() {
+  const location = useLocation();
+
   return (
     <div className="min-h-screen bg-[#faf9f6] text-slate-800 relative overflow-hidden">
       {/* Animated Background Particles / Streaks */}
@@ -16,10 +19,21 @@ export default function Layout() {
       <div className="relative z-10 flex flex-col min-h-screen">
         <Header />
         <main className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-          <Outlet />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
         <Footer />
       </div>
     </div>
   );
 }
+

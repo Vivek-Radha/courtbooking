@@ -33,7 +33,7 @@ export default function Header() {
       navigate('/admin');
     } catch (err) {
       console.error(err);
-      alert(err.message || 'Login failed');
+      toast.error(err.message || 'Incorrect password. Please try again.');
     }
   };
 
@@ -95,7 +95,7 @@ export default function Header() {
           </div>
         </Link>
 
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center gap-1 md:gap-2">
           {/* Get Help Email */}
           <button 
             onClick={() => {
@@ -113,20 +113,22 @@ export default function Header() {
               );
               window.location.href = 'mailto:vivekradha01@gmail.com?subject=Court Booking Query';
             }}
-            className="text-gray-400 hover:text-amber-500 hover:scale-110 transition-all duration-300 p-2 rounded-xl hover:bg-amber-50 flex items-center justify-center"
+            className="text-gray-400 hover:text-amber-500 transition-all duration-300 px-2.5 py-2 rounded-xl hover:bg-amber-50 flex items-center gap-1.5"
             title="Get Help / Email Us"
           >
-            <Headset size={22} />
+            <Headset size={20} />
+            <span className="hidden md:inline text-xs font-semibold tracking-wide">Help</span>
           </button>
 
-          {/* Hidden Admin Trigger */}
+          {/* Admin Trigger */}
           <button 
             onClick={() => setShowAdminLogin(true)}
-            className="text-gray-300 hover:text-rose-500 hover:scale-110 transition-all duration-300 p-2 rounded-xl hover:bg-rose-50 flex items-center justify-center"
+            className="text-gray-300 hover:text-rose-500 transition-all duration-300 px-2.5 py-2 rounded-xl hover:bg-rose-50 flex items-center gap-1.5"
             aria-label="Admin Access"
             title="Admin Access"
           >
-            <ShieldAlert size={20} />
+            <ShieldAlert size={18} />
+            <span className="hidden md:inline text-xs font-semibold tracking-wide">Admin</span>
           </button>
         </div>
       </header>
@@ -138,12 +140,14 @@ export default function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={() => setShowAdminLogin(false)}
             className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
           >
             <motion.div 
               initial={{ scale: 0.93, y: 15 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.93, y: 15 }}
+              onClick={(e) => e.stopPropagation()}
               className="bg-white p-8 rounded-3xl w-full max-w-sm relative border border-gray-100 shadow-2xl"
             >
               <button 

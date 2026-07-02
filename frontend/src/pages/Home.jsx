@@ -264,7 +264,7 @@ export default function Home() {
                       setShowBookingForm(true);
                     }}
                     className={`
-                      relative overflow-hidden rounded-xl py-4 px-3 font-semibold border transition-all duration-300 text-center whitespace-nowrap text-sm
+                      relative overflow-hidden rounded-xl py-4 px-1 sm:px-3 font-semibold border transition-all duration-300 text-center whitespace-nowrap text-xs sm:text-sm tracking-tight sm:tracking-normal
                       ${isBooked
                         ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed shadow-inner'
                         : isSelected

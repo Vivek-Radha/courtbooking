@@ -17,6 +17,16 @@ const EVENING_SLOTS = [
   "18:00 - 19:00", "19:00 - 20:00", "20:00 - 21:00", "21:00 - 22:00"
 ];
 
+// Convert 24hr slot string to 12hr display format
+const formatSlotDisplay = (slot) => {
+  return slot.replace(/(\d{2}):(\d{2})/g, (_, h, m) => {
+    const hour = parseInt(h, 10);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${m} ${period}`;
+  });
+};
+
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -262,7 +272,7 @@ export default function Home() {
                           : 'bg-gradient-to-b from-white to-amber-50/50 border-amber-200/60 shadow-sm hover:border-amber-400 hover:shadow-md text-gray-700'}
                     `}
                   >
-                    <span className={isBooked ? 'filter blur-[1px]' : ''}>{slot}</span>
+                    <span className={isBooked ? 'filter blur-[1px]' : ''}>{formatSlotDisplay(slot)}</span>
                     {isBooked && (
                       <div className="absolute inset-0 bg-white/40 flex items-center justify-center backdrop-blur-[0.5px]">
                         <span className="text-[10px] tracking-widest font-serif-logo font-black text-rose-600 border border-rose-300 px-2.5 py-1 rounded bg-white shadow-sm transform -rotate-12 select-none">
@@ -310,7 +320,7 @@ export default function Home() {
                   <p className="text-rose-400 text-sm mt-1.5 font-medium flex items-center gap-2">
                     <span>📅 {format(selectedDate, 'MMMM d, yyyy')}</span>
                     <span className="text-gray-600">•</span>
-                    <span>⏰ {selectedSlot}</span>
+                    <span>⏰ {formatSlotDisplay(selectedSlot)}</span>
                   </p>
                 </div>
 
@@ -442,7 +452,7 @@ export default function Home() {
                   className="text-gray-500 text-center leading-relaxed"
                 >
                   You're all set. Your court is booked for <br />
-                  <span className="font-bold text-gray-800">{successDetails.slot}</span> on <span className="font-medium text-gray-700">{format(successDetails.date, 'MMM do')}</span>.
+                  <span className="font-bold text-gray-800">{formatSlotDisplay(successDetails.slot)}</span> on <span className="font-medium text-gray-700">{format(successDetails.date, 'MMM do')}</span>.
                 </motion.p>
 
                 <motion.button

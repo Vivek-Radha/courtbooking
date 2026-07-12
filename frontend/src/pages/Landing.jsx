@@ -22,7 +22,7 @@ const features = [
   {
     icon: CheckCircle,
     title: 'Instant Confirmation',
-    description: 'Get immediate confirmation with a delightful animation. No waiting, no emails.',
+    description: 'Get immediate confirmation, No waiting, no emails.',
     color: 'text-emerald-500',
     bg: 'bg-emerald-50',
     border: 'border-emerald-200/60',
